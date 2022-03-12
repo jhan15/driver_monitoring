@@ -31,7 +31,7 @@ class Iris:
             pos = self.face_landmarks.landmark[id]
             cx = int(pos.x * w)
             cy = int(pos.y * h)
-            iris_pos.append([cx, cy])
+            iris_pos.append((cx, cy))
 
         return iris_pos
     

@@ -49,21 +49,21 @@ class FacialTracker:
             self.right_eye.iris.draw_iris(True)
         
         if self._left_eye_closed() or self._right_eye_closed():
-            self.eyes_status = 'Eye closed'
+            self.eyes_status = 'eye closed'
             return
         
         if not self.left_eye.eye_closed() and not self.right_eye.eye_closed():
             if   self.left_eye.gaze_right()  and self.right_eye.gaze_right():
-                self.eyes_status = 'Gazing right'
+                self.eyes_status = 'gazing right'
             elif self.left_eye.gaze_left()   and self.right_eye.gaze_left():
-                self.eyes_status = 'Gazing left'
+                self.eyes_status = 'gazing left'
             elif self.left_eye.gaze_center() and self.right_eye.gaze_center():
-                self.eyes_status = 'Gazing center'
+                self.eyes_status = 'gazing center'
 
     def _check_yawn_status(self):
         self.yawn_status = ''
         if self.lips.mouth_open():
-            self.yawn_status = 'Yawning'
+            self.yawn_status = 'yawning'
     
     def _left_eye_closed(self, threshold=conf.FRAME_CLOSED):
         return self.left_eye_closed_frames > threshold

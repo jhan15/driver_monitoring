@@ -10,6 +10,39 @@ from facial_tracking.facialTracking import FacialTracker
 import facial_tracking.conf as conf
 
 
+def infer_one_frame(image, model, yolo_model, facial_tracker):
+    eyes_status = ''
+    yawn_status = ''
+    action = ''
+
+    facial_tracker.process_frame(image)
+    if facial_tracker.detected:
+        eyes_status = facial_tracker.eyes_status
+        yawn_status = facial_tracker.yawn_status
+
+    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    yolo_result = yolo_model(rgb_image)
+
+    rgb_image = cv2.resize(rgb_image, (224,224))
+    rgb_image = tf.expand_dims(rgb_image, 0)
+    y = model.predict(rgb_image)
+    result = np.argmax(y, axis=1)
+
+    if result[0] == 0 and yolo_result.xyxy[0].shape[0] > 0:
+        action = list(ACTIONS.keys())[result[0]]
+    if result[0] == 1 and eyes_status == 'eye closed':
+        action = list(ACTIONS.keys())[result[0]]
+
+    cv2.putText(image, f'Driver eyes: {eyes_status}', (30,40), 0, 1,
+                conf.LM_COLOR, 2, lineType=cv2.LINE_AA)
+    cv2.putText(image, f'Driver mouth: {yawn_status}', (30,80), 0, 1,
+                conf.CT_COLOR, 2, lineType=cv2.LINE_AA)
+    cv2.putText(image, f'Driver action: {action}', (30,120), 0, 1,
+                conf.WARN_COLOR, 2, lineType=cv2.LINE_AA)
+    
+    return image
+
+
 def infer(args):
     image_path = args.image
     video_path = args.video
@@ -26,16 +59,9 @@ def infer(args):
     facial_tracker = FacialTracker()
 
     if image_path:
-        yolo_result = yolo_model(image_path)
-        
-        if yolo_result.xyxy[0].shape[0] > 0:
-            image = load_and_preprocess_image(image_path)
-            image = tf.expand_dims(image, 0)
-
-            y = model.predict(image)
-            result = np.argmax(y, axis=1)
-            if y[0][result] > 0.5:
-                print('Predicted action:', list(ACTIONS.keys())[result[0]])
+        image = cv2.imread(image_path)
+        image = infer_one_frame(image, model, yolo_model, facial_tracker)
+        cv2.imwrite('images/test_inferred.jpg', image)
     
     if video_path or cam_id:
         cap = cv2.VideoCapture(video_path) if video_path else cv2.VideoCapture(cam_id)
@@ -49,39 +75,10 @@ def infer(args):
         
         while True:
             success, image = cap.read()
-
             if not success:
-                print("Ignoring empty camera frame.")
-                continue
+                break
 
-            eyes_status = ''
-            yawn_status = ''
-            action = ''
-
-            facial_tracker.process_frame(image)
-            if facial_tracker.detected:
-                eyes_status = facial_tracker.eyes_status
-                yawn_status = facial_tracker.yawn_status
-
-            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            yolo_result = yolo_model(rgb_image)
-            
-            if yolo_result.xyxy[0].shape[0] > 0:
-                rgb_image = cv2.resize(rgb_image, (224,224))
-                rgb_image = tf.expand_dims(rgb_image, 0)
-                y = model.predict(rgb_image)
-                result = np.argmax(y, axis=1)
-                
-                if y[0][result] > 0.5:
-                    action = list(ACTIONS.keys())[result[0]]
-
-            cv2.putText(image, f'Driver eyes: {eyes_status}', (30,40), 0, 1,
-                        conf.LM_COLOR, 2, lineType=cv2.LINE_AA)
-            cv2.putText(image, f'Driver mouth: {yawn_status}', (30,80), 0, 1,
-                        conf.CT_COLOR, 2, lineType=cv2.LINE_AA)
-            cv2.putText(image, f'Driver action: {action}', (30,120), 0, 1,
-                        conf.WARN_COLOR, 2, lineType=cv2.LINE_AA)
-            
+            image = infer_one_frame(image, model, yolo_model, facial_tracker)
             if save:
                 out.write(image)
             else:
