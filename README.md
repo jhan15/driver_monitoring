@@ -7,7 +7,7 @@ This is a project aimed to monitor a driver's status and actions, such as yawn, 
 The driver monitoring system consists of two parts.
 
 * Facial tracking: an API based on [Mediapipe](https://github.com/google/mediapipe) to track facial status, which predicts the eye status (open, close), if open, the gazing direction (left, right, center), and yawn.
-* Action detection: a deep learning model (MobileNet) to predcit driver's behavior (phonecall, textting). [Yolov5](https://github.com/ultralytics/yolov5) is further used to detect phones to enhance performance.
+* Action detection: a deep learning model (MobileNet) to predcit driver's behavior (phonecall, texting). [Yolov5](https://github.com/ultralytics/yolov5) is further used to detect phones to enhance performance.
 
 ## Requirements
 
