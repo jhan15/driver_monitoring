@@ -7,7 +7,7 @@ This is a project aimed to monitor a driver's status and actions, such as yawn, 
 The driver monitoring system consists of two parts.
 
 * Facial tracking: an API based on [Mediapipe](https://github.com/google/mediapipe) to track facial status, which predicts the eye status (open, close), if open, the gazing direction (left, right, center), and yawn.
-* Action detection: a deep learning model (MobileNet) to predcit driver's behavior (phonecall, textting). Yolov5 is further used to detect phones to enhance performance.
+* Action detection: a deep learning model (MobileNet) to predcit driver's behavior (phonecall, textting). [Yolov5](https://github.com/ultralytics/yolov5) is further used to detect phones to enhance performance.
 
 ## Requirements
 
@@ -39,3 +39,13 @@ $ python3 facial.py
 ## Dataset
 
 The dataset used to train action detection model is [DMD](https://github.com/Vicomtech/DMD-Driver-Monitoring-Dataset).
+
+## Demo
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/62132206/158055802-8e1146f8-32ef-4ae4-967a-eb79ac42e172.gif?raw=true">
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/62132206/158055799-22effa40-89d2-46da-a317-d58ea3e186b5.gif?raw=true">
+</p>
