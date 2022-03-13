@@ -29,8 +29,8 @@ $ git clone https://github.com/jhan15/driver_monitoring.git
 $ cd driver_monitoring
 
 # driver monitorting system
-$ python3 dms.py --video <path_to_video> --checkpoint models/model_split.h5
-               --webcam <cam_id>
+$ python3 dms.py --checkpoint models/model_split.h5 --video <path_to_video> 
+                                                    --webcam <cam_id> # or
 
 # play with only facial tracking
 $ python3 facial.py
