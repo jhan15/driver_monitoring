@@ -10,6 +10,7 @@ import tensorflow as tf
 ACTIONS = {'phonecall': 0, 'texting': 1}
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
+# The DMD dataset, collected from 5 persons, each with 4 different scenes
 SESSIONS = {
     1: [
         '2019-03-08-09:31:15',
@@ -39,6 +40,8 @@ SESSIONS = {
 }
 
 def sampling_data(rootdir, num_skip_frames=10):
+    """ Read dmd data paths and labels from a root directory. """
+
     all_image_paths  = None
     all_image_labels = None
 
@@ -60,6 +63,8 @@ def sampling_data(rootdir, num_skip_frames=10):
     return all_image_paths, all_image_labels
 
 def plot_sample_distribution(labels):
+    """ Plot sample distribution per class. """
+
     classes, cnts = np.unique(labels, return_counts=True)
     
     plt.figure(figsize=(12, 1))
@@ -70,16 +75,22 @@ def plot_sample_distribution(labels):
     plt.title("Distribution of samples")
 
 def preprocess_image(image, size):
+    """ Preprocess image for training. """
+
     image = tf.image.decode_jpeg(image, channels=3)
     image = tf.image.resize(image, size)
 
     return image
 
 def load_and_preprocess_image(path, size=[224,224]):
+    """ Load and preprocess image for training. """
+
     image = tf.io.read_file(path)
     return preprocess_image(image, size)
 
 def display4images(images, labels):
+    """ Display 4 image samples. """
+
     plt.figure(figsize=(8,8))
     for n, image in enumerate(images):
         plt.subplot(2,2,n+1)
@@ -91,6 +102,8 @@ def display4images(images, labels):
     plt.show()
 
 def create_ds(paths, labels):
+    """ Create a tf dataset for training. """
+
     path_ds = tf.data.Dataset.from_tensor_slices(paths)
     image_ds = path_ds.map(load_and_preprocess_image, num_parallel_calls=AUTOTUNE)
     label_ds = tf.data.Dataset.from_tensor_slices(tf.cast(labels, tf.int64))
@@ -99,6 +112,8 @@ def create_ds(paths, labels):
     return image_label_ds
 
 def plot_his_metrics(history, image_name):
+    """ Plot the loss and accuracy of training. """
+    
     metrics = ['loss', 'accuracy']
     plt.figure(figsize=(15, 6))
     plt.rc('font', size=12)

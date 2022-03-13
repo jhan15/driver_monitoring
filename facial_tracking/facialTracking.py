@@ -8,6 +8,9 @@ from facial_tracking.lips import Lips
 
 
 class FacialTracker:
+    """
+    The object of facial tracking, predicting status of eye, iris, and mouth.
+    """
 
     def __init__(self):
 

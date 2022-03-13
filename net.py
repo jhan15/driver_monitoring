@@ -7,6 +7,9 @@ from tensorflow.keras.optimizers import Adam
 
 
 class MobileNet(Sequential):
+    """
+    Customized mobilenet architecture.
+    """
     
     def __init__(self, input_shape=(224,224,3), num_classes=2, dropout=0.25, lr=1e-3,
                  augmentation=False, train_base=False, add_layer=False):
