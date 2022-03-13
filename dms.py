@@ -63,8 +63,13 @@ def infer(args):
         image = infer_one_frame(image, model, yolo_model, facial_tracker)
         cv2.imwrite('images/test_inferred.jpg', image)
     
-    if video_path or cam_id:
+    if video_path or cam_id is not None:
         cap = cv2.VideoCapture(video_path) if video_path else cv2.VideoCapture(cam_id)
+        
+        if cam_id is not None:
+            cap.set(3, conf.FRAME_W)
+            cap.set(4, conf.FRAME_H)
+        
         frame_width = int(cap.get(3))
         frame_height = int(cap.get(4))
         fps = cap.get(cv2.CAP_PROP_FPS)

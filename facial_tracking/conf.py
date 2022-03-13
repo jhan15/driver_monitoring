@@ -1,7 +1,7 @@
 # Camera parameters
 CAM_ID  = 0
-FRAME_W = 800
-FRAME_H = 600
+FRAME_W = 1280
+FRAME_H = 720
 
 # Plot configuration
 TEXT_COLOR = (102,51,0)
