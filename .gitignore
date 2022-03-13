@@ -1,6 +1,5 @@
 .DS_Store
 *.pyc
 *.pt
-*.h5
 *.mp4
 *.avi
