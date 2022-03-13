@@ -1,71 +1,39 @@
-# dms
+# driver_monitoring_system
 
-## export dmd images
+This is a project aimed to monitor a driver's status and actions, such as yawn, phonecall, etc.
+
+## Architecture
+
+* Facial tracking: an API based on [Mediapipe](https://github.com/google/mediapipe) to track facial status, which predicts the eye status (open, close), if open, the gazing direction (left, right, center), and yawn.
+* Action detection: a deep learning model (MobileNet) to predcit driver's behavior (phonecall, textting). Yolov5 is further used to detect phones to enhance performance.
+
+## Requirements
+
+```
+python=3.8
+tensorflow=2.8.0
+torch=1.11.0
+opencv-python=4.5.5
+mediapipe=0.8.9.1
+matplotlib=3.5.1
+numpy=1.22.3
+scikit-learn=1.0.2
+```
+
+## Usage
 
 ```bash
-# activate the virtual environment
-$ source Documents/anntool_py/bin/activate
+$ git clone https://github.com/jhan15/driver_monitoring.git
+$ cd driver_monitoring
 
-# to the explore-material tool directory
-$ cd Documents/project_dms/exploreMaterial-tool
+# driver monitorting
+python3 infer.py --video <path_to_video> --checkpoint models/model_split.h5
+                 --webcam <cam_id>
 
-# run the tool
-$ python DExTool.py
-
-# desitination directory
-$ /home/han/Documents/project_dms
-# dmd data directory (for type g)
-$ /home/han/Documents/project_dms/dmd/gA
+# Facial tracking
+$ python3 facial.py
 ```
 
-## usage
+## Dataset
 
-```bash
-$ source Documents/anntool_py/bin/activate
-$ cd Documents/DMD-Driver-Monitoring-Dataset/dms/facialTracking
-$ python3 facialTracking.py
-```
-
-## all classes
-
-```python
-all_classes = [
-    # 'driver_actions/change_gear',
-    'driver_actions/drinking',
-    'driver_actions/hair_and_makeup',
-    'driver_actions/phonecall_left',
-    'driver_actions/phonecall_right',
-    # 'driver_actions/radio',
-    'driver_actions/reach_backseat',
-    'driver_actions/reach_side',
-    'driver_actions/safe_drive',
-    # 'driver_actions/standstill_or_waiting',
-    'driver_actions/talking_to_passenger',
-    'driver_actions/texting_left',
-    'driver_actions/texting_right',
-    # 'driver_actions/unclassified',
-    'gaze_on_road/looking_road',
-    # 'gaze_on_road/not_looking_road',
-    # 'hand_on_gear/hand_on_gear',
-    # 'hands_using_wheel/both',
-    # 'hands_using_wheel/none',
-    # 'hands_using_wheel/only_left',
-    # 'hands_using_wheel/only_right',
-    # 'objects_in_scene/bottle',
-    # 'objects_in_scene/cellphone',
-    # 'objects_in_scene/hair_comb',
-    # 'talking/talking'
-]
-```
-
-## plan
-
-* detect face, eye status, gaze direction, yawn, emotion
-```python
-eye = ['open', 'closed']
-gaze = ['left', 'right', 'middle']
-mouth = ['closed', 'slight open', 'large open']
-emotion = ['happy', 'neutral', 'unhappy']
-```
-* behavior detection using dmd
-* dms to make decision
+The dataset used to train action detection model is [DMD](https://github.com/Vicomtech/DMD-Driver-Monitoring-Dataset).
